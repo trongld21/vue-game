@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Monster Slayer</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="./css/foundation.min.css" />
+    <link rel="stylesheet" href="./css/app.css" />
+</head>
+
+<body>
+    <div id="app">
+        <section class="row">
+            <div class="small-6 columns">
+                <h1 class="text-center" style="color: white">YOU</h1>
+                <img src="img/hero.png" alt="" style="height: 300px; width: 100%" />
+                <div class="healthbar">
+                    <div class="healthbar text-center" style="background-color: red; margin: 0; color: white" v-bind:style="{width: playerHealth + '%'}"></div>
+                </div>
+            </div>
+            <div class="small-6 columns">
+                <h1 class="text-center" style="color: white">MONSTER</h1>
+                <img src="img/monster.png" alt="" style="height: 300px; width: 100%" />
+
+                <div class="healthbar">
+                    <div class="healthbar text-center" style="background-color: red; margin: 0; color: white" v-bind:style="{width: monsterHealth + '%'}"></div>
+                </div>
+            </div>
+        </section>
+        <section class="row controls" v-if="!gameIsRunning">
+            <div class="small-12 columns">
+                <button id="start-game" v-on:click="startNewGame">
+            START NEW GAME
+          </button>
+            </div>
+        </section>
+        <section class="row controls" v-else="">
+            <div class="small-12 columns">
+                <button id="attack" v-on:click="attack">ATTACK</button>
+                <button id="special-attack" v-on:click="specialAttack">
+            SPECIAL ATTACK
+          </button>
+                <button id="heal" v-on:click="heal">HEAL</button>
+                <button id="give-up" v-on:click="giveUp">GIVE UP</button>
+            </div>
+        </section>
+        <section class="row log" v-if="turns.length > 0">
+            <div class="small-12 columns">
+                <ul>
+                    <li v-for="turn in turns" v-bind:class="{'player-turn': turn.isPlayer,'monster-turn': !turn.isPlayer}">
+                        {{turn.textLog}}
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+    <div class="container">
+        <div class="shapes-wrapper">
+            <div class="centering circle counter-clock-wise second-inner-circle">
+                <span class="character">α</span>
+                <span class="character">β</span>
+                <span class="character">γ</span>
+                <span class="character">δ</span>
+                <span class="character">ε</span>
+                <span class="character">ζ</span>
+                <span class="character">η</span>
+                <span class="character">θ</span>
+                <span class="character">ι</span>
+                <span class="character">κ</span>
+                <span class="character">λ</span>
+                <span class="character">μ</span>
+                <span class="character">ν</span>
+                <span class="character">ξ</span>
+                <span class="character">ο</span>
+                <span class="character">π</span>
+                <span class="character">ρ</span>
+                <span class="character">σ</span>
+                <span class="character">τ</span>
+                <span class="character">υ</span>
+                <span class="character">φ</span>
+                <span class="character">χ</span>
+                <span class="character">ψ</span>
+                <span class="character">ω</span>
+            </div>
+            <div class="centering all-zoom">
+                <div class="centering border circle reverse-rotate-x inner-most-circle"></div>
+                <div class="centering border circle reverse-rotate-y second-inner-circle"></div>
+            </div>
+            <div class="centering square-wrapper square-zoom">
+                <div class="centering border square clock-wise"></div>
+                <div class="centering border square counter-clock-wise"></div>
+            </div>
+            <div class="centering circle counter-clock-wise2 outer-most-circle">
+                <span class="character">α</span>
+                <span class="character">β</span>
+                <span class="character">γ</span>
+                <span class="character">δ</span>
+                <span class="character">ε</span>
+                <span class="character">ζ</span>
+                <span class="character">η</span>
+                <span class="character">θ</span>
+                <span class="character">ι</span>
+                <span class="character">κ</span>
+                <span class="character">λ</span>
+                <span class="character">μ</span>
+                <span class="character">ν</span>
+                <span class="character">ξ</span>
+                <span class="character">ο</span>
+                <span class="character">π</span>
+                <span class="character">ρ</span>
+                <span class="character">σ</span>
+                <span class="character">τ</span>
+                <span class="character">υ</span>
+                <span class="character">φ</span>
+                <span class="character">χ</span>
+                <span class="character">ψ</span>
+                <span class="character">ω</span>
+                <span class="character">α</span>
+                <span class="character">β</span>
+                <span class="character">γ</span>
+                <span class="character">δ</span>
+                <span class="character">ε</span>
+                <span class="character">ζ</span>
+                <span class="character">η</span>
+                <span class="character">θ</span>
+                <span class="character">ι</span>
+                <span class="character">κ</span>
+                <span class="character">λ</span>
+                <span class="character">μ</span>
+                <span class="character">ν</span>
+                <span class="character">ξ</span>
+                <span class="character">ο</span>
+                <span class="character">π</span>
+                <span class="character">ρ</span>
+                <span class="character">σ</span>
+                <span class="character">τ</span>
+                <span class="character">υ</span>
+                <span class="character">φ</span>
+                <span class="character">χ</span>
+                <span class="character">ψ</span>
+                <span class="character">ω</span>
+            </div>
+            <div class="centering all-zoom">
+                <div class="centering border circle reverse-rotate-x second-outer-circle"></div>
+                <div class="centering twist-z-minus outer-most-circle">
+                    <div class="centering border circle reverse-rotate-x outer-most-circle"></div>
+                </div>
+                <div class="centering twist-z-plus outer-most-circle2">
+                    <div class="centering border circle reverse-rotate-x outer-most-circle2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./js/app.js"></script>
+
+</html>
